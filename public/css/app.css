@@ -11,7 +11,7 @@ a {
 .chat {
     font-style:italic;
     width: 20%;
-    float: left;
+    float: right;
 }
 .dropdown-menu{
     background-color: #222222;
