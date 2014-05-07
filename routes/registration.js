@@ -4,14 +4,15 @@ var AuthError = require('models/user').AuthError;
 var async = require('async');
 
 exports.get = function(req, res) {
-    res.render('login');
-};
+    res.render('registration');
+}
 
-exports.post = function(req, res, next) {
+exports.post = function(req, res, next){
+
     var username = req.body.username;
     var password = req.body.password;
 
-    User.sign_in(username, password, function(err, user) {
+    User.registration(username, password, function(err, user){
         if (err) {
             if (err instanceof AuthError) {
                 return next(new HttpError(403, err.message));
@@ -22,5 +23,4 @@ exports.post = function(req, res, next) {
         req.session.user = user._id;
         res.redirect("/");
     });
-
-};
+}
