@@ -1,0 +1,31 @@
+<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation" >
+    <ul class="nav navbar-nav">
+        <li><a href="/">Главная</a></li>
+        <% if (user) { %>
+        <li><a href="/chat">Игровое поле</a></li>
+        <% } %>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+            <a href="#" class="dropdown-menu-right" data-toggle="dropdown">
+                Вход на сайт
+                <b class="caret"></b>
+            </a>
+            <ul id="menu" class="dropdown-menu">
+                <% if (user) { %>
+                <li><a href="" onclick="$('<form method=POST action=/logout>').appendTo('body').submit();return false">Выйти</a></form></li>
+                <% } else { %>
+                <li><a href="/">Регистрация</a></li>
+                <li><a href="/login">Войти</a></li>
+                <% } %>
+            </ul>
+        </li>
+    </ul>
+    <!--<ul class="nav navbar-nav navbar-right">-->
+        <!--<% if (user) { %>-->
+        <!--<li><a href="" onclick="$('<form method=POST action=/logout>').appendTo('body').submit();return false">Выйти</a></form></li>-->
+        <!--<% } else { %>-->
+        <!--<li><a href="/login">Войти</a></li>-->
+        <!--<% } %>-->
+    <!--</ul>-->
+</nav>
