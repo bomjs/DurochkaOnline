@@ -2,8 +2,8 @@
 <% block('title', "Игровое поле") -%>
 
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
-<script src="/Game_engine/game_engine.js"></script>
 <script src="Game_engine/sprite.js"></script>
+<script src="/Game_engine/game_engine.js"></script>
 <div id="body">
     <div id="field">
         <div id="game_table">
@@ -22,36 +22,8 @@
     </div>
 
 </div>
+
 <script>
-    // create the Scene object
-    var scene = sjs.Scene({w:594, h:240});
-
-    // load the images in parallel. When all the images are
-    // ready, the callback function is called.
-    scene.loadImages(['/resourse/sourse.png'], function() {
-
-        // create the Sprite object;
-        var sp = scene.Sprite('/resourse/sourse.png');
-
-        // change the visible size of the sprite
-        sp.size(39, 55);
-
-        // apply the latest visual changes to the sprite
-        // (draw if canvas, update attribute if DOM);
-        sp.update();
-
-        // change the offset of the image in the sprite
-        // (this works the opposite way of a CSS background)
-        sp.offset(50, 50);
-
-        // various transformations
-       /* sp.move(100, 100);
-        sp.rotate(3.14 / 4);
-        sp.scale(2);
-        sp.setOpacity(0.8);
-
-        sp.update();*/
-    });
     var input = $('#room input');
     var ul = $('#room ul');
     var form = $('#room form');
@@ -60,9 +32,9 @@
         reconnect: false
     });
 
-    socket
+      socket
             .on('message', function(username, message) {
-                printMessage(username + "> " + message);
+                    printMessage(username + "> " + message);
             })
             .on('leave', function(username) {
                 printStatus(username + " вышел из чата");
