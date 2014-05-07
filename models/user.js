@@ -22,6 +22,14 @@ var schema = new Schema({
     created: {
         type: Date,
         default: Date.now
+    },
+    wins: {
+        type: Number,
+        default: 0
+    },
+    loses:{
+        type: Number,
+        default: 0
     }
 });
 
@@ -75,7 +83,7 @@ schema.statics.registration = function(username, password, callback){
                 if (user) {
                     callback(new AuthError("Пользователь с таким именем уже существует. Где фантазия, олух? "))
                 }else{
-                    var user = new User({username: username, password: password});
+                    var user = new User({username: username, password: password, wins: 0, loses: 0});
                     user.save(function(err) {
                         if (err) return callback(err);
                         callback(null, user);
