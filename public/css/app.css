@@ -10,6 +10,25 @@ a {
 }
 .chat {
     font-style:italic;
-    width: 150px;
-    float: right;
+    width: 20%;
+    float: left;
+}
+#field
+{
+    min-height: 50px;
+    width: 80%;
+    float: left;
+}
+#game_table{
+    margin: 8%;
+    min-height: 320px;
+    min-width: 400px;
+    background-color: green;
+    border-radius: 60px;
+    border: 10px double black;
+}
+#body
+{
+    height: 100%;
+    background: red;
 }

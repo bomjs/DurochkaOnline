@@ -1,20 +1,25 @@
 <% layout('layout/page') -%>
-<% block('title', "Чат") -%>
+<% block('title', "Игровое поле") -%>
 
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
-<div class="chat">
-    <div id="room">
-        <ul class="media-list"></ul>
-        <form>
-           <input disabled class="form-horizontal" autocomplete="off" autofocus placeholder="Сообщение...">
-        </form>
+<div id="body">
+    <div id="field">
+        <div id="game_table">
+
+        </div>
     </div>
+
+    <div class="chat">
+        <h2>Чат</h2>
+        <div id="room">
+            <ul class="media-list"></ul>
+            <form>
+               <input disabled class="form-horizontal" autocomplete="off" autofocus placeholder="Сообщение...">
+            </form>
+        </div>
+    </div>
+
 </div>
-
-<div id="field">
-
-</div>
-
 <script>
     var input = $('#room input');
     var ul = $('#room ul');
