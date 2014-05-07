@@ -23,7 +23,9 @@ a {
     float: left;
 }
 #game_table{
+    position: fixed;
     margin: 8%;
+    background-color: green;
     min-height: 320px;
     min-width: 400px;
     border-radius: 60px;
