@@ -5,27 +5,25 @@
         <li><a href="/game_field">Игровое поле</a></li>
         <% } %>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-            <a href="#" class="dropdown-menu-right" data-toggle="dropdown">
-                Вход на сайт
-                <b class="caret"></b>
-            </a>
-            <ul id="menu" class="dropdown-menu">
-                <% if (user) { %>
-                <li><a href="" onclick="$('<form method=POST action=/logout>').appendTo('body').submit();return false">Выйти</a></form></li>
-                <% } else { %>
-                <li><a href="/registration">Регистрация</a></li>
-                <li><a href="/login">Войти</a></li>
-                <% } %>
-            </ul>
-        </li>
-    </ul>
-    <!--<ul class="nav navbar-nav navbar-right">-->
-        <!--<% if (user) { %>-->
-        <!--<li><a href="" onclick="$('<form method=POST action=/logout>').appendTo('body').submit();return false">Выйти</a></form></li>-->
-        <!--<% } else { %>-->
-        <!--<li><a href="/login">Войти</a></li>-->
-        <!--<% } %>-->
-    <!--</ul>-->
+    <% if (user) { %>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="" onclick="$('<form method=POST action=/logout>').appendTo('body').submit();return false">Выйти</a></form></li>
+        </ul>
+    <% } else { %>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-menu-right" data-toggle="dropdown">
+                    Вход на сайт
+                    <b class="caret"></b>
+                </a>
+                <ul id="menu" class="dropdown-menu">
+
+                    <li><a href="/registration">Регистрация</a></li>
+                    <li><a href="/login">Войти</a></li>
+
+                </ul>
+            </li>
+        </ul>
+    <% } %>
 </nav>
