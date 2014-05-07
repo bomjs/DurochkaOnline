@@ -1,9 +1,9 @@
 <% layout('/layout/page') -%>
-<% block('title', "Вход") -%>
+<% block('title', "Регистрация") -%>
 
 <p>Введите имя пользователя и пароль.</p>
 
-<form class="form-horizontal login-form" method="post" action="/login" name="login-form">
+<form class="form-horizontal login-form" method="post" action="/registration" name="login-form">
     <div class="form-group">
         <label for="input-username" class="col-lg-2 control-label">Имя</label>
 
@@ -20,7 +20,7 @@
     </div>
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10">
-            <button type="submit" class="btn btn-primary" data-loading-text="Отправляю...">Войти</button>
+            <button type="submit" class="btn btn-primary" data-loading-text="Отправляю...">Зарегестрироваться</button>
             <span class="help-block error"></span>
         </div>
     </div>
@@ -34,7 +34,7 @@
         $(":submit", form).button("loading");
 
         $.ajax({
-            url: "/login",
+            url: "/registration",
             data: form.serialize(),
             method: "POST",
             complete: function() {
@@ -42,8 +42,8 @@
             },
             statusCode: {
                 200: function() {
-                    form.html("Вы вошли в сайт").addClass('alert-success');
-                    window.location.href = "/chat";
+                    form.html("Успешная регистрация").addClass('alert-success');
+                    window.location.href = "/";
                 },
                 403: function(jqXHR) {
                     var error = JSON.parse(jqXHR.responseText);

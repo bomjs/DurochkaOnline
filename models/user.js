@@ -42,7 +42,7 @@ schema.methods.checkPassword = function(password) {
     return this.encryptPassword(password) === this.hashedPassword;
 };
 
-schema.statics.authorize = function(username, password, callback) {
+schema.statics.sign_in = function(username, password, callback) {
     var User = this;
 
     async.waterfall([
@@ -54,16 +54,34 @@ schema.statics.authorize = function(username, password, callback) {
                 if (user.checkPassword(password)) {
                     callback(null, user);
                 } else {
-                    callback(new AuthError("Пароль неверен"));
+                    callback(new AuthError("Пароль неверен. Вспоминайте"));
                 }
-            } else {
-                var user = new User({username: username, password: password});
-                user.save(function(err) {
-                    if (err) return callback(err);
-                    callback(null, user);
-                });
+            }else{
+                callback(new AuthError("Пользователь не существует. Зарегестрируйтесь или убирайтесь"))
             }
         }
+    ],callback);
+}
+
+schema.statics.registration = function(username, password, callback){
+
+    var User = this;
+
+    async.waterfall([
+            function(callback) {
+                    User.findOne({username: username}, callback);
+            },
+            function(user, callback) {
+                if (user) {
+                    callback(new AuthError("Пользователь с таким именем уже существует. Где фантазия, олух? "))
+                }else{
+                    var user = new User({username: username, password: password});
+                    user.save(function(err) {
+                        if (err) return callback(err);
+                        callback(null, user);
+                    });
+                }
+            }
     ], callback);
 };
 
