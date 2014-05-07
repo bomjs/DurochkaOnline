@@ -43,7 +43,7 @@
             statusCode: {
                 200: function() {
                     form.html("Вы вошли в сайт").addClass('alert-success');
-                    window.location.href = "/chat";
+                    window.location.href = "/game_field";
                 },
                 403: function(jqXHR) {
                     var error = JSON.parse(jqXHR.responseText);
