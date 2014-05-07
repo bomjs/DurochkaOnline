@@ -16,9 +16,6 @@ a {
 .dropdown-menu{
     background-color: #222222;
 }
-#menu li:hover{
-    background-color: #000000;
-}
 #field
 {
     min-height: 50px;
