@@ -22,12 +22,38 @@ a {
     width: 80%;
     float: left;
 }
+.cards{
+    background: url(/resourse/sourse.png);
+    width: 39px;
+    height: 55px;
+    float: left;
+    margin-left: 5px;
+    box-shadow: 1px 5px 10px rgba(21, 20, 18, 0.78);
+    border-radius: 5px;
+    -webkit-transition: margin 0.5s ease-out;
+    -moz-transition: margin 0.5s ease-out;
+    -o-transition: margin 0.5s ease-out;
+}
+.cards:hover{
+    margin-top: -5px;
+}
+#player_cards{
+    margin: auto;
+    /*background-color: #ffff00;*/
+    height: 60px;
+    width: 270px;
+}
+#player_cards_1{
+    margin: 180px auto;
+    /*background-color: #ffff00;*/
+    height: 60px;
+    width: 270px;
+}
 #game_table{
-    position: fixed;
-    margin: 8%;
+    margin: 10%;
     background-color: green;
-    min-height: 320px;
-    min-width: 400px;
+    height: 320px;
+    width: 500px;
     border-radius: 60px;
     border: 10px double black;
 }
