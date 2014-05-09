@@ -5,17 +5,23 @@
     window.onload=function(){
         var player_cards=document.getElementById('player_cards');
         var player_cards_1=document.getElementById('player_cards_1');
+        var cards=[52]
+        for (var i=0;i<4;i++){
+            for(var j=0;j<13;j++){
+                cards[j+(i*13)] = document.createElement('div');
+                cards[j+(i*13)].className='cards';
+                cards[j+(i*13)].id='card'+(j+(i*13));
+                cards[j+(i*13)].style.backgroundPosition = -46*j+"px "+i*(-60.5)+"px";
+                }
+        }
+        var index=0;
         for (var i=0;i<6;i++){
-            var card = document.createElement('div');
-            var card_1 = document.createElement('div');
-            player_cards.appendChild(card);
-            card.className='cards';
-            card.style.backgroundPosition = -46*Math.floor(Math.random( ) * (13))+"px "+Math.floor(Math.random( ) * (4))*(-61.5)+"px";
-            player_cards_1.appendChild(card_1);
-            card_1.className='cards';
-            card_1.style.backgroundPosition = -46*Math.floor(Math.random( ) * (13))+"px "+ Math.floor(Math.random( ) * (4))*(-61.5)+"px";
+            index=Math.floor(Math.random( ) * (51));
+            player_cards.appendChild(cards[index]);
+            player_cards_1.appendChild(cards[i]);
         }
     }
+
 </script>
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
 <!--<script src="Game_engine/sprite.js"></script>-->

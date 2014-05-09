@@ -37,15 +37,18 @@ a {
 .cards:hover{
     margin-top: -5px;
 }
+.card_chouse{
+    margin: 100px auto;
+}
 #player_cards{
     margin: auto;
-    /*background-color: #ffff00;*/
+    background-color: #ffff00;
     height: 60px;
     width: 270px;
 }
 #player_cards_1{
     margin: 180px auto;
-    /*background-color: #ffff00;*/
+    background-color: #ffff00;
     height: 60px;
     width: 270px;
 }
