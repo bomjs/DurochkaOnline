@@ -1,14 +1,37 @@
 <% layout('layout/page') -%>
 <% block('title', "Игровое поле") -%>
-
+<script src="/vendor/bower_components/jquery/dist/jquery.js"></script>
+<script>
+    window.onload=function(){
+        var player_cards=document.getElementById('player_cards');
+        var player_cards_1=document.getElementById('player_cards_1');
+        for (var i=0;i<6;i++){
+            var card = document.createElement('div');
+            var card_1 = document.createElement('div');
+            player_cards.appendChild(card);
+            card.className='cards';
+            card.style.backgroundPosition = -46*Math.floor(Math.random( ) * (13))+"px "+Math.floor(Math.random( ) * (4))*(-61.5)+"px";
+            player_cards_1.appendChild(card_1);
+            card_1.className='cards';
+            card_1.style.backgroundPosition = -46*Math.floor(Math.random( ) * (13))+"px "+ Math.floor(Math.random( ) * (4))*(-61.5)+"px";
+        }
+    }
+</script>
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
-<script src="Game_engine/sprite.js"></script>
-<script src="/Game_engine/game_engine.js"></script>
+<!--<script src="Game_engine/sprite.js"></script>-->
+<!--<script src="/Game_engine/game_engine.js"></script>-->
 <div id="body">
-    <!--<div id="field">-->
-        <!--<div id="game_table">-->
-        <!--</div>-->
-    <!--</div>-->
+    <div id="field">
+        <div id="game_table">
+            <div id="player_cards">
+
+            </div>
+            <div id="player_cards_1">
+
+            </div>
+
+        </div>
+    </div>
     <div class="chat">
         <h2>Чат</h2>
         <div id="room">
