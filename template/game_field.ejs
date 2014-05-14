@@ -1,31 +1,9 @@
 <% layout('layout/page') -%>
 <% block('title', "Игровое поле") -%>
 <script src="/vendor/bower_components/jquery/dist/jquery.js"></script>
-<script>
-    window.onload=function(){
-        var player_cards=document.getElementById('player_cards');
-        var player_cards_1=document.getElementById('player_cards_1');
-        var cards=[52]
-        for (var i=0;i<4;i++){
-            for(var j=0;j<13;j++){
-                cards[j+(i*13)] = document.createElement('div');
-                cards[j+(i*13)].className='cards';
-                cards[j+(i*13)].id='card'+(j+(i*13));
-                cards[j+(i*13)].style.backgroundPosition = -46*j+"px "+i*(-60.5)+"px";
-                }
-        }
-        var index=0;
-        for (var i=0;i<6;i++){
-            index=Math.floor(Math.random( ) * (51));
-            player_cards.appendChild(cards[index]);
-            player_cards_1.appendChild(cards[i]);
-        }
-    }
-
-</script>
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
 <!--<script src="Game_engine/sprite.js"></script>-->
-<!--<script src="/Game_engine/game_engine.js"></script>-->
+<script src="/Game_engine/game_engine.js"></script>
 <div id="body">
     <div id="field">
         <div id="game_table">

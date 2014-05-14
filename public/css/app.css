@@ -23,34 +23,33 @@ a {
     float: left;
 }
 .cards{
-    background: url(/resourse/sourse.png);
-    width: 39px;
-    height: 55px;
+    background: url(/resourse/sourse_2.jpg);
+    width: 53px;
+    height: 74px;
     float: left;
     margin-left: 5px;
     box-shadow: 1px 5px 10px rgba(21, 20, 18, 0.78);
-    border-radius: 5px;
+    border-radius: 4px;
     -webkit-transition: margin 0.5s ease-out;
     -moz-transition: margin 0.5s ease-out;
     -o-transition: margin 0.5s ease-out;
 }
 .cards:hover{
     margin-top: -5px;
+    cursor: pointer;
 }
-.card_chouse{
-    margin: 100px auto;
-}
+
 #player_cards{
     margin: auto;
-    background-color: #ffff00;
-    height: 60px;
-    width: 270px;
+    /*background-color: #ffff00;*/
+    height: 67px;
+    width: 360px;
 }
 #player_cards_1{
     margin: 180px auto;
-    background-color: #ffff00;
-    height: 60px;
-    width: 270px;
+    /*background-color: #ffff00;*/
+    height: 67px;
+    width: 360px;
 }
 #game_table{
     margin: 10%;
@@ -63,5 +62,5 @@ a {
 #body
 {
     height: 100%;
-    background: red;
+   /* background: red;*/
 }
