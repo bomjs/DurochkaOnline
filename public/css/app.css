@@ -22,6 +22,13 @@ a {
     width: 80%;
     float: left;
 }
+#deck{
+    background-color: #ffff00;
+    width: 53px;
+    height: 74px;
+    float:right;
+    margin: 40px 15px auto;
+}
 .cards{
     background: url(/resourse/sourse_2.jpg);
     width: 53px;
