@@ -41,9 +41,19 @@ a {
     -moz-transition: margin 0.5s ease-out;
     -o-transition: margin 0.5s ease-out;
 }
+.enemy_cards{
+    background: url(/resourse/sourse_2.jpg);
+    width: 53px;
+    height: 74px;
+    float: left;
+    margin-left: 5px;
+    box-shadow: 1px 5px 10px rgba(21, 20, 18, 0.78);
+    border-radius: 4px;
+}
 .cards:hover{
     margin-top: -5px;
     cursor: pointer;
+    box-shadow: 1px 5px 10px rgba(82, 122, 255, 0.92);
 }
 
 #player_cards{
@@ -53,7 +63,7 @@ a {
     height: 67px;
     width: 360px;
 }
-#enemy_cards{
+#enemy_card{
     margin-top: 2%;
     margin-left: 19%;
     /*margin: 180px auto;*/
