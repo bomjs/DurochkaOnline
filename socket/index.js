@@ -6,6 +6,9 @@ var cookie = require('cookie'); // npm i cookie
 var sessionStore = require('lib/sessionStore');
 var HttpError = require('error').HttpError;
 var User = require('models/user').User;
+var Foolgame = require('models/Gameserver');
+
+var free = null;
 
 function loadSession(sid, callback) {
 
@@ -89,6 +92,10 @@ module.exports = function(server) {
 
     });
 
+    function closeRoom(game_id, enemy){
+        socket.leave(game_id);
+        io.sockets.socket(enemy).leave(game_id);
+    }
     io.sockets.on('session:reload', function(sid) {
         var clients = io.sockets.clients();
 
@@ -101,7 +108,6 @@ module.exports = function(server) {
                     client.disconnect();
                     return;
                 }
-
                 if (!session) {
                     client.emit("logout");
                     client.disconnect();
@@ -118,17 +124,36 @@ module.exports = function(server) {
     io.sockets.on('connection', function(socket) {
 
         var username = socket.handshake.user.get('username');
+        var time = (new Date).toLocaleTimeString();
 
-        socket.broadcast.emit('join', username);
+        socket.broadcast.emit('join', username, time);
 
         socket.on('message', function(text, cb) {
-            socket.broadcast.emit('message', username, text);
+            socket.broadcast.emit('message', username, text, time);
             cb && cb();
         });
-
         socket.on('disconnect', function() {
-            socket.broadcast.emit('leave', username);
+            socket.broadcast.emit('leave', username, time);
         });
+        socket.on('step',function(game_id,id){
+            Foolgame.Step(game_id,id,socket);
+        });
+        socket.on('start', function(){
+            if(!free){
+                io.sockets.socket(socket.id).emit('wait');
+                free=socket.id;
+            }else{
+                var game_id = free+socket.id;
+                io.sockets.socket(free).emit('ready',game_id);
+                socket.emit('ready',game_id);
+                socket.join(game_id);
+                io.sockets.socket(free).join(game_id);
+                io.sockets.in(game_id).emit('message', "Game Server : ", "Good luck", time);
+                Foolgame.CreateGame(game_id, socket,io.sockets.socket(free),0,0);
+                free=null;
+            }
+        })
+
 
     });
 
