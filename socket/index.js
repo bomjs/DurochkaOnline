@@ -123,6 +123,8 @@ module.exports = function(server) {
 
     io.sockets.on('connection', function(socket) {
 
+        console.log('%s: %s - connected', socket.id.toString(), socket.handshake.address.address);
+
         var username = socket.handshake.user.get('username');
         var time = (new Date).toLocaleTimeString();
 

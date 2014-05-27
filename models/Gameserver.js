@@ -22,6 +22,8 @@ var GameItem = function(game_id, user, enemy, x, y) {
         this.deck[i]=i;
     }
     this.shuffle();
+    //Козырь
+    this.advantage = this.deck[51];
     // Игроки
     this.board = [[],[]];
     this.user = user;
@@ -35,7 +37,7 @@ var GameItem = function(game_id, user, enemy, x, y) {
     this.steps = 0;
     this.index = 0;
     // Кто ходит
-    this.turn = 1;
+    this.turn = 0;
 }
 
 GameItem.prototype.shuffle = function(){
@@ -44,7 +46,6 @@ GameItem.prototype.shuffle = function(){
 
 GameItem.prototype.distribution=function(){
     if(this.turn){
-
         if(this.x<6){
             this.pdeck1=juciefroot(this.x,this.deck, this.index);
             this.index+=6-this.x;
@@ -56,9 +57,7 @@ GameItem.prototype.distribution=function(){
             this.index+=6-this.y;
             this.y = 5;
         }
-
     }else{
-
         if(this.y<6){
             this.pdeck2=juciefroot(this.y,this.deck, this.index);
             this.index+=6-this.y;
@@ -77,15 +76,52 @@ FoolGame.CreateGame = function(game_id, user, enemy, x, y){
     var game = new GameItem(game_id,user,enemy,x,y);
     games[game_id]=game;
     games[game_id].distribution();
-
+    games[game_id].user.emit('advantage',games[game_id].advantage);
+    games[game_id].enemy.emit('advantage',games[game_id].advantage);
 }
-FoolGame.Step = function(game_id,id,user){
-    if(games[game_id].turn)
-        if (games[game_id].user.id != user.id){
-            games[game_id].enemy.emit('card',id);
-            games[game_id].user.emit('mycard',id);
-            console.log('user');
+numcard = function(id_card){
+    var j = Math.floor(id_card/13);
+    var i = id_card-13*j;
+    return i;
+}
+mastcard = function(id_card){
+    var j = Math.floor(id_card/13);
+    return j;
+}
+
+tryput = function(game_id,id){
+    games[game_id].pdeck1.splice(games[game_id].pdeck1.indexOf(id), 1);
+    for(var i=0; i<games[game_id].board[0].length;i++){
+           if(numcard(id)==numcard(games[game_id].board[0][i])){
+               console.log(numcard(games[game_id].board[0][i]));
+               console.log(numcard(id));
+               return true;
+           }
         }
-        console.log(games[game_id].board[0][0]=id);
-        games[game_id].board[0][0]=id;
+    return false;
+}
+
+FoolGame.Step = function(game_id,id,user){
+    console.log(games[game_id].advantage);
+    if (!games[game_id].steps){
+        if((games[game_id].turn==0)&&(games[game_id].user.id == user.id))
+        {
+                games[game_id].enemy.emit('step_enemy',id,games[game_id].x);
+                games[game_id].user.emit('step_user',id);
+                games[game_id].x--;
+                games[game_id].board[0][games[game_id].steps]=id;
+                games[game_id].steps++;
+        }
+    }
+    else{
+        if((games[game_id].turn==0)&&(games[game_id].user.id == user.id)&&(tryput(game_id,id)))
+        {
+            games[game_id].enemy.emit('step_enemy',id,games[game_id].x);
+            games[game_id].user.emit('step_user',id);
+            games[game_id].x--;
+            games[game_id].board[0][games[game_id].steps]=id;
+            games[game_id].steps++;
+        }
+    }
+    console.log(games[game_id].board);
 }
