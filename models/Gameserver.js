@@ -79,6 +79,19 @@ FoolGame.CreateGame = function(game_id, user, enemy, x, y){
     games[game_id].user.emit('advantage',games[game_id].advantage);
     games[game_id].enemy.emit('advantage',games[game_id].advantage);
 }
+
+union = function(mas){
+    var res = [];
+    var k=0;
+    for(var i=0;i<2;i++){
+        for(var j= 0;j<mas[i].length;j++){
+            res[k]=parseInt(mas[i][j]);
+            k++;
+        }
+    }
+    return res;
+}
+
 numcard = function(id_card){
     var j = Math.floor(id_card/13);
     var i = id_card-13*j;
@@ -89,31 +102,47 @@ mastcard = function(id_card){
     return j;
 }
 
+trycover = function(game_id, id){
+    console.log(games[game_id].advantage);
+    console.log(mastcard(id));
+    var card = games[game_id].board[0][games[game_id].board[1].length];
+    if((mastcard(card)==mastcard(id))&&(numcard(card)<numcard(id))){
+            games[game_id].pdeck2.splice(games[game_id].pdeck2.indexOf(id), 1);
+            return true;
+    }
+    if ((mastcard(games[game_id].advantage)==mastcard(id))&&((mastcard(card)!=mastcard(id)))){
+        console.log("ko3ipi");
+        games[game_id].pdeck2.splice(games[game_id].pdeck2.indexOf(id), 1);
+        return true;
+    }
+    return false;
+}
+
 tryput = function(game_id,id){
     games[game_id].pdeck1.splice(games[game_id].pdeck1.indexOf(id), 1);
-    for(var i=0; i<games[game_id].board[0].length;i++){
+    if(games[game_id].board[0].length){
+    for(i=0; i<games[game_id].board[0].length;i++){
            if(numcard(id)==numcard(games[game_id].board[0][i])){
                console.log(numcard(games[game_id].board[0][i]));
                console.log(numcard(id));
                return true;
            }
         }
-    return false;
+    for(i=0; i<games[game_id].board[1].length;i++){
+        if(numcard(id)==numcard(games[game_id].board[1][i])){
+            console.log(numcard(games[game_id].board[1][i]));
+            console.log(numcard(id));
+            return true;
+        }
+    }
+            return false;
+    }else{
+        return true;
+    }
 }
 
 FoolGame.Step = function(game_id,id,user){
     console.log(games[game_id].advantage);
-    if (!games[game_id].steps){
-        if((games[game_id].turn==0)&&(games[game_id].user.id == user.id))
-        {
-                games[game_id].enemy.emit('step_enemy',id,games[game_id].x);
-                games[game_id].user.emit('step_user',id);
-                games[game_id].x--;
-                games[game_id].board[0][games[game_id].steps]=id;
-                games[game_id].steps++;
-        }
-    }
-    else{
         if((games[game_id].turn==0)&&(games[game_id].user.id == user.id)&&(tryput(game_id,id)))
         {
             games[game_id].enemy.emit('step_enemy',id,games[game_id].x);
@@ -122,6 +151,33 @@ FoolGame.Step = function(game_id,id,user){
             games[game_id].board[0][games[game_id].steps]=id;
             games[game_id].steps++;
         }
+        if((games[game_id].turn!=0)&&(games[game_id].enemy.id == user.id)&&(trycover(game_id,id)))
+        {
+            games[game_id].user.emit('step_enemy',id,games[game_id].y);
+            games[game_id].enemy.emit('step_user',id);
+            games[game_id].y--;
+            games[game_id].board[1][games[game_id].steps]=id;
+            games[game_id].steps++;
+            if(games[game_id].board[1].length == games[game_id].board[0].length){
+                games[game_id].turn = 0;
+            }
+        }
+   console.log(games[game_id].board);
+   console.log(id);
+}
+
+FoolGame.endstep = function(game_id, user){
+    var tmp;
+    if(user.id==games[game_id].user.id){
+    (games[game_id].turn!=0 ? games[game_id].turn=0 : games[game_id].turn=1);
+        games[game_id].steps = 0;
+    console.log('endstep '+games[game_id].turn);
     }
-    console.log(games[game_id].board);
+}
+FoolGame.takeAll = function(game_id, enemy){
+    if(enemy.id==games[game_id].enemy.id){
+        games[game_id].pdeck2 = games[game_id].pdeck2.concat(union(games[game_id].board));
+        games[game_id].board = null;
+        games[game_id].enemy.emit('take', games[game_id].pdeck2);
+    }
 }

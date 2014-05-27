@@ -6,7 +6,7 @@ var cookie = require('cookie'); // npm i cookie
 var sessionStore = require('lib/sessionStore');
 var HttpError = require('error').HttpError;
 var User = require('models/user').User;
-var Foolgame = require('models/Gameserver');
+var FoolGame = require('models/Gameserver');
 
 var free = null;
 
@@ -138,7 +138,7 @@ module.exports = function(server) {
             socket.broadcast.emit('leave', username, time);
         });
         socket.on('step',function(game_id,id){
-            Foolgame.Step(game_id,id,socket);
+            FoolGame.Step(game_id,id,socket);
         });
         socket.on('start', function(){
             if(!free){
@@ -146,16 +146,21 @@ module.exports = function(server) {
                 free=socket.id;
             }else{
                 var game_id = free+socket.id;
-                io.sockets.socket(free).emit('ready',game_id);
-                socket.emit('ready',game_id);
+                io.sockets.socket(free).emit('ready',game_id, false);
+                socket.emit('ready',game_id, true);
                 socket.join(game_id);
                 io.sockets.socket(free).join(game_id);
                 io.sockets.in(game_id).emit('message', "Game Server : ", "Good luck", time);
-                Foolgame.CreateGame(game_id, socket,io.sockets.socket(free),0,0);
+                FoolGame.CreateGame(game_id, socket,io.sockets.socket(free),0,0);
                 free=null;
             }
         })
-
+        socket.on('endstep', function(game_id){
+            FoolGame.endstep(game_id, socket);
+        })
+        socket.on('take', function(game_id){
+            FoolGame.takeAll(game_id, socket);
+        })
 
     });
 

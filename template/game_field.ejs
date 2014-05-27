@@ -3,6 +3,8 @@
 <script src="/vendor/bower_components/jquery/dist/jquery.js"></script>
 <script src="/vendor/bower_components/socket.io-client/dist/socket.io.js"></script>
 <!--<script src="Game_engine/sprite.js"></script>-->
+<script src="chat_room/chat.js"></script>
+<script src="Game_engine/game_engine.js"></script>
 <div id="body">
     <div id="field">
         <div id="enemy_card">
@@ -17,6 +19,9 @@
                 <div id='deck'></div>
                 <div id="advantage"></div>
             </div>
+            <button id="button" class="btn btn-default btn-xs" style="margin: 30px 0 5px 15px;">
+            Найти игру
+            </button>
         </div>
 
         <div id="player_cards">
@@ -34,5 +39,3 @@
 
 </div>
 
-<script src="chat_room/chat.js"></script>
-<script src="Game_engine/game_engine.js"></script>
