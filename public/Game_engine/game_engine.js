@@ -21,18 +21,21 @@ function takeAll(game_id){
     socket.emit('take', game_id);
 }
 
-
-function Drawing(deck){
+function Drawing(deck, len){
     var player_cards=document.getElementById('player_cards');
     var enemy_cards=document.getElementById('enemy_card');
     var n;
-    for (i = 0; i < 6; i++){
+    removeChildren(enemy_cards, null);
+    removeChildren(player_cards, null);
+    for (i = 0; i < len; i++){
         //enemy card
         var enemy_card = document.createElement('div');
         enemy_card.className='enemy_cards';
         enemy_card.id = i + 'enemy';
         enemy_cards.appendChild(enemy_card);
         setBackground(-1,enemy_card);
+    }
+    for (i = 0; i < deck.length; i++){
         //player card
         n = deck[i];
         var card = document.createElement('div');
@@ -45,7 +48,7 @@ function Drawing(deck){
         setBackground(n,card);
     }
 }
-1
+
 function removeChildren(node, pdeck) {
     var children = node.childNodes;
     while(children.length) {
@@ -102,8 +105,8 @@ var Foolgame={
                 .on('end', function(){
                   socket.emit('close', this.game_id);
                 })
-                .on('distribution', function(deck){
-                    Drawing(deck);
+                .on('distribution', function(deck, len){
+                    Drawing(deck, len);
                 })
                 .on('take',function(pdeck){
                     var player_cards = document.getElementById("player_cards");

@@ -29,8 +29,8 @@ var GameItem = function(game_id, user, enemy, x, y) {
     this.user = user;
     this.enemy = enemy;
     // Количество карт у каждого игрока
-    this.x = x;
-    this.y = y;
+    this.pl1 = x;
+    this.pl2 = y;
     this.pdeck1 = [];
     this.pdeck2 = [];
     // Кол-во сделанных ходов
@@ -46,31 +46,33 @@ GameItem.prototype.shuffle = function(){
 
 GameItem.prototype.distribution=function(){
     if(this.turn){
-        if(this.x<6){
-            this.pdeck1=juciefroot(this.x,this.deck, this.index);
-            this.index+=6-this.x;
-            this.x = 5;
+        if(this.pl1<6){
+            this.pdeck1=juciefroot(this.pl1,this.deck, this.index);
+            this.index+=6-this.pl1;
+            this.pl1 = 5;
         }
 
-        if(this.y<6){
-            this.pdeck2=juciefroot(this.y,this.deck, this.index);
-            this.index+=6-this.y;
-            this.y = 5;
+        if(this.pl2<6){
+            this.pdeck2=juciefroot(this.pl2,this.deck, this.index);
+            this.index+=6-this.pl2;
+            this.pl2 = 5;
         }
     }else{
-        if(this.y<6){
-            this.pdeck2=juciefroot(this.y,this.deck, this.index);
-            this.index+=6-this.y;
-            this.y = 5;
+        if(this.pl2<6){
+            this.pdeck2=juciefroot(this.pl2,this.deck, this.index);
+            this.index+=6-this.pl2;
+            this.pl2 = 5;
         }
-        if(this.x<6){
-            this.pdeck1=juciefroot(this.x,this.deck, this.index);
-                this.index+=6-this.x;
-            this.x = 5;
+        if(this.pl1<6){
+            this.pdeck1=juciefroot(this.pl1,this.deck, this.index);
+            this.index+=6-this.pl1;
+            this.pl1 = 5;
         }
     }
-    this.user.emit('distribution', this.pdeck1);
-    this.enemy.emit('distribution', this.pdeck2);
+    this.user.emit('distribution', this.pdeck1, this.pdeck2.length);
+    this.enemy.emit('distribution', this.pdeck2, this.pdeck1.length);
+    console.log(this.pdeck1+" x= "+this.pl1+" y="+this.pl2+" index = "+this.index);
+    console.log(this.pdeck2+" x= "+this.pl1+" y="+this.pl2+" index = "+this.index);
 }
 FoolGame.CreateGame = function(game_id, user, enemy, x, y){
     var game = new GameItem(game_id,user,enemy,x,y);
@@ -111,7 +113,6 @@ trycover = function(game_id, id){
             return true;
     }
     if ((mastcard(games[game_id].advantage)==mastcard(id))&&((mastcard(card)!=mastcard(id)))){
-        console.log("ko3ipi");
         games[game_id].pdeck2.splice(games[game_id].pdeck2.indexOf(id), 1);
         return true;
     }
@@ -145,29 +146,31 @@ FoolGame.Step = function(game_id,id,user){
     console.log(games[game_id].advantage);
         if((games[game_id].turn==0)&&(games[game_id].user.id == user.id)&&(tryput(game_id,id)))
         {
-            games[game_id].enemy.emit('step_enemy',id,games[game_id].x);
+            games[game_id].enemy.emit('step_enemy',id,games[game_id].pl1);
             games[game_id].user.emit('step_user',id);
-            games[game_id].x--;
+            games[game_id].pl1--;
             games[game_id].board[0][games[game_id].steps]=id;
             games[game_id].steps++;
+            console.log("x12= "+games[game_id].pl1);
         }
         if((games[game_id].turn!=0)&&(games[game_id].enemy.id == user.id)&&(trycover(game_id,id)))
         {
-            games[game_id].user.emit('step_enemy',id,games[game_id].y);
+            games[game_id].user.emit('step_enemy',id,games[game_id].pl2);
             games[game_id].enemy.emit('step_user',id);
-            games[game_id].y--;
+            games[game_id].pl2--;
             games[game_id].board[1][games[game_id].steps]=id;
             games[game_id].steps++;
             if(games[game_id].board[1].length == games[game_id].board[0].length){
                 games[game_id].turn = 0;
             }
+            console.log("y12="+games[game_id].pl2);
+
         }
    console.log(games[game_id].board);
    console.log(id);
 }
 
 FoolGame.endstep = function(game_id, user){
-    var tmp;
     if(user.id==games[game_id].user.id){
     (games[game_id].turn!=0 ? games[game_id].turn=0 : games[game_id].turn=1);
         games[game_id].steps = 0;
@@ -177,7 +180,8 @@ FoolGame.endstep = function(game_id, user){
 FoolGame.takeAll = function(game_id, enemy){
     if(enemy.id==games[game_id].enemy.id){
         games[game_id].pdeck2 = games[game_id].pdeck2.concat(union(games[game_id].board));
-        games[game_id].board = null;
+        games[game_id].pl2+=union(games[game_id].board).length;
         games[game_id].enemy.emit('take', games[game_id].pdeck2);
+        games[game_id].distribution();
     }
 }
