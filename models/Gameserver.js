@@ -170,7 +170,7 @@ FoolGame.takeAll = function(game_id){
     games[game_id].steps_enemy = 0;
     games[game_id].steps_user = 0;
     games[game_id].pdeck2 = games[game_id].pdeck2.concat(union(games[game_id].board));
-    games[game_id].pl2 = games[game_id].pdeck2.length;
+    games[game_id].pl2 = games[game_id].pdeck2.length-1;
     games[game_id].turn = 0;
     games[game_id].distribution();
 }

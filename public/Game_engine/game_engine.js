@@ -130,11 +130,6 @@ var Foolgame={
                     setBackground(id,card);
                 })
         })
-    },
-    startGame: function(gameId, turn, x, y){
-        this.game_id = gameId;
-        this.turn = turn;
-
     }
 }
 
