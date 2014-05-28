@@ -20,13 +20,22 @@ function endstep(game_id){
 function takeAll(game_id){
     socket.emit('take', game_id);
 }
+function clearTable(){
+    var player_cards=document.getElementById('player_cards');
+    var enemy_cards=document.getElementById('enemy_card');
+    var field_enemy = document.getElementById('enemy_field');
+    var field_user = document.getElementById('player_field');
+    removeChildren(enemy_cards);
+    removeChildren(player_cards);
+    removeChildren(field_enemy);
+    removeChildren(field_user);
+}
 
 function Drawing(deck, len){
+    clearTable();
     var player_cards=document.getElementById('player_cards');
     var enemy_cards=document.getElementById('enemy_card');
     var n;
-    removeChildren(enemy_cards, null);
-    removeChildren(player_cards, null);
     for (i = 0; i < len; i++){
         //enemy card
         var enemy_card = document.createElement('div');
@@ -49,24 +58,11 @@ function Drawing(deck, len){
     }
 }
 
-function removeChildren(node, pdeck) {
+function removeChildren(node) {
     var children = node.childNodes;
     while(children.length) {
         node.removeChild(children[0]);
     }
-    if (pdeck)
-        for(var i=0;i<pdeck.length;i++){
-            //player card
-            var n = pdeck[i];
-            var card = document.createElement('div');
-            card.className='cards';
-            card.id=pdeck[i];
-            card.onclick=function(){
-                socket.emit('step',Foolgame.game_id,(this).id);
-            }
-            node.appendChild(card);
-            setBackground(n,card);
-        }
 }
 
 
@@ -107,16 +103,6 @@ var Foolgame={
                 })
                 .on('distribution', function(deck, len){
                     Drawing(deck, len);
-                })
-                .on('take',function(pdeck){
-                    var player_cards = document.getElementById("player_cards");
-                    var cards_ontable = document.getElementById('enemy_field');
-                    var gamefield=document.getElementById('player_field');
-                    removeChildren(player_cards,pdeck);
-                    removeChildren(gamefield,null);
-                    removeChildren(cards_ontable,null);
-
-
                 })
                 .on('advantage', function(id){
                     var ad = document.getElementById('advantage');

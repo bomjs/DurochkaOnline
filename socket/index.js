@@ -159,7 +159,7 @@ module.exports = function(server) {
             FoolGame.endstep(game_id, socket);
         })
         socket.on('take', function(game_id){
-            FoolGame.takeAll(game_id, socket);
+            FoolGame.take(game_id, socket);
         })
 
     });
