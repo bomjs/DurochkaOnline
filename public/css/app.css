@@ -32,22 +32,26 @@ a {
     float:right;
     margin: 5px 5px 0 0;
 }
+#display{
+    margin: 10px 0 0 30px;
+    font-size: 17px;
+    color: #020202;
+    font-family:fantasy;
+    font-style: oblique;
+}
 #game_field{
     float: left;
-    background-color: #808080;
     margin: 50px 0 15px 22px;
     width: 390px;
     height: 200px;
 }
 #player_field{
     margin: 15px 0 0 0;
-    background-color: #424680;
     height: 70px;
     width: 390px;
 }
 #enemy_field{
     margin: 15px 0 0 0;
-    background-color: #806b27;
     width: 390px;
     height: 70px;
 }

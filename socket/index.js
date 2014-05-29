@@ -122,9 +122,7 @@ module.exports = function(server) {
     });
 
     io.sockets.on('connection', function(socket) {
-
         console.log('%s: %s - connected', socket.id.toString(), socket.handshake.address.address);
-
         var username = socket.handshake.user.get('username');
         var time = (new Date).toLocaleTimeString();
 
@@ -146,8 +144,8 @@ module.exports = function(server) {
                 free=socket.id;
             }else{
                 var game_id = free+socket.id;
-                io.sockets.socket(free).emit('ready',game_id, false);
-                socket.emit('ready',game_id, true);
+                io.sockets.socket(free).emit('ready',game_id);
+                socket.emit('ready',game_id);
                 socket.join(game_id);
                 io.sockets.socket(free).join(game_id);
                 io.sockets.in(game_id).emit('message', "Game Server : ", "Good luck", time);
