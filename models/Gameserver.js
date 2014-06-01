@@ -1,9 +1,15 @@
 var games = [];
 function juciefroot(pdeck, x, deck, index){
-    if(x<6){
-        for(var i = index; i<index+(6-x); i++){
-            pdeck[5-(i-index)] = deck[index+i];
+    var i;
+    if (pdeck.length>0){
+        for(i = index; i<index+(5-x); i++){
+            pdeck[5-(i-index)] = deck[i];
         }
+    }else{
+        for(i = index; i<index+(6-x); i++){
+            pdeck[5-(i-index)] = deck[i];
+        }
+
     }
     return pdeck;
 }
@@ -95,21 +101,63 @@ GameItem.prototype.shuffle = function(){
 };
 GameItem.prototype.distribution=function(){
     this.board = [[],[]];
-    if(this.pl1<5){
-        this.pdeck1=juciefroot(this.pdeck1,this.pl1,this.deck, this.index);
-        this.index+=5-this.pl1;
-        this.pl1 = 5;
-    }
-
-    if(this.pl2<5){
-        this.pdeck2=juciefroot(this.pdeck2,this.pl2,this.deck, this.index);
-        this.index+=5-this.pl2;
-        this.pl2 = 5;
-    }
+    if (this.index<52){
+        var x = this.pdeck1.length,y=this.pdeck2.length;
+        var len=0;
+        if (6-x>0)
+            len+=6-x;
+        if (6-y>0)
+            len+=6-y;
+        console.log('index = '+this.index+len);
+        if (this.index+len>52){
+            console.log('last');
+            if (x>y){
+                for (i=y-1;i<x;i++){
+                    this.pdeck2[i]=this.deck[this.index];
+                    this.index++;
+                }
+            }
+            if(y>x){
+                    for (i=x-1;i<y;i++){
+                        this.pdeck1[i]=this.deck[this.index];
+                        this.index++;
+                    }
+                }
+            x = this.pdeck1.length;
+            y = this.pdeck2.length;
+            var tmp = 52-this.index;
+            tmp=tmp/2;
+            for (i = x-1;(i<x+tmp-1)&&(this.index<52);i++){
+                this.pdeck1[i]=this.deck[this.index];
+                this.index++;
+            }
+            for (i = y-1;(i<y+tmp-1)&&(this.index<52);i++){
+                this.pdeck2[i]=this.deck[this.index];
+                this.index++;
+            }
+            this.pl1 = this.pdeck1.length-1;
+            this.pl2 = this.pdeck2.length-1;
+        }
+        else{
+            if(x<6){
+                this.pdeck1=juciefroot(this.pdeck1,this.pl1,this.deck, this.index);
+                this.index+=this.pdeck1.length-x;
+                this.pl1 = 5;
+            }
+            if(y<6){
+                this.pdeck2=juciefroot(this.pdeck2,this.pl2,this.deck, this.index);
+                this.index+=this.pdeck2.length - y;
+                this.pl2 = 5;
+            }
+    }    }
     this.user.emit('distribution', this.pdeck1, this.pdeck2.length);
     this.enemy.emit('distribution', this.pdeck2, this.pdeck1.length);
     this.user.emit('turn',this.game_id,true);
     this.enemy.emit('turn',this.game_id,false);
+    console.log('index '+this.index);
+    console.log(this.pdeck1);
+    console.log(this.pdeck2);
+    console.log(this.deck);
 }
 FoolGame.CreateGame = function(game_id, user, enemy, x, y){
     var game = new GameItem(game_id,user,enemy,x,y);
@@ -119,6 +167,7 @@ FoolGame.CreateGame = function(game_id, user, enemy, x, y){
     games[game_id].enemy.emit('advantage',games[game_id].advantage);
 }
 FoolGame.Step = function(game_id,id,user){
+    console.log('step');
         if((games[game_id].user.id == user.id)&&(tryput(game_id,id)))
         {
             games[game_id].enemy.emit('step_enemy',id,games[game_id].pl1);

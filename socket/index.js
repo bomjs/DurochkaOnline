@@ -23,7 +23,6 @@ function loadSession(sid, callback) {
     });
 
 }
-
 function loadUser(session, callback) {
 
     if (!session.user) {
@@ -44,12 +43,10 @@ function loadUser(session, callback) {
     });
 
 }
-
 module.exports = function(server) {
     var io = require('socket.io').listen(server);
     io.set('origins', 'localhost:*');
     io.set('logger', log);
-
     io.set('authorization', function(handshake, callback) {
         async.waterfall([
             function(callback) {
@@ -91,7 +88,6 @@ module.exports = function(server) {
         });
 
     });
-
     function closeRoom(game_id, enemy){
         socket.leave(game_id);
         io.sockets.socket(enemy).leave(game_id);
@@ -120,7 +116,6 @@ module.exports = function(server) {
         });
 
     });
-
     io.sockets.on('connection', function(socket) {
         console.log('%s: %s - connected', socket.id.toString(), socket.handshake.address.address);
         var username = socket.handshake.user.get('username');
@@ -161,6 +156,5 @@ module.exports = function(server) {
         })
 
     });
-
     return io;
 };
