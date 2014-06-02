@@ -92,7 +92,7 @@ var GameItem = function(game_id, user, enemy, x, y) {
     // Кол-во сделанных ходов
     this.steps_user = 0;
     this.steps_enemy = 0;
-    this.index = 0;
+    this.index = 38;
     // флаг на взятие карт
     this.turn = 0;
 }
@@ -112,13 +112,13 @@ GameItem.prototype.distribution=function(){
         if (this.index+len>52){
             console.log('last');
             if (x>y){
-                for (i=y-1;i<x;i++){
+                for (i=y;i<x;i++){
                     this.pdeck2[i]=this.deck[this.index];
                     this.index++;
                 }
             }
             if(y>x){
-                    for (i=x-1;i<y;i++){
+                    for (i=x;i<y;i++){
                         this.pdeck1[i]=this.deck[this.index];
                         this.index++;
                     }
@@ -127,11 +127,11 @@ GameItem.prototype.distribution=function(){
             y = this.pdeck2.length;
             var tmp = 52-this.index;
             tmp=tmp/2;
-            for (i = x-1;(i<x+tmp-1)&&(this.index<52);i++){
+            for (i = x;(i<x+tmp)&&(this.index<52);i++){
                 this.pdeck1[i]=this.deck[this.index];
                 this.index++;
             }
-            for (i = y-1;(i<y+tmp-1)&&(this.index<52);i++){
+            for (i = y;(i<y+tmp)&&(this.index<52);i++){
                 this.pdeck2[i]=this.deck[this.index];
                 this.index++;
             }
@@ -149,11 +149,13 @@ GameItem.prototype.distribution=function(){
                 this.index+=this.pdeck2.length - y;
                 this.pl2 = 5;
             }
-    }    }
-    this.user.emit('distribution', this.pdeck1, this.pdeck2.length);
-    this.enemy.emit('distribution', this.pdeck2, this.pdeck1.length);
+        }
+    }
+    this.user.emit('distribution', this.pdeck1, this.pdeck2.length, this.index);
+    this.enemy.emit('distribution', this.pdeck2, this.pdeck1.length, this.index);
     this.user.emit('turn',this.game_id,true);
     this.enemy.emit('turn',this.game_id,false);
+    if(this.index>51) this.CheckWinner();
     console.log('index '+this.index);
     console.log(this.pdeck1);
     console.log(this.pdeck2);
@@ -218,6 +220,20 @@ FoolGame.takeAll = function(game_id){
     games[game_id].pl2 = games[game_id].pdeck2.length-1;
     games[game_id].turn = 0;
     games[game_id].distribution();
+}
+GameItem.prototype.CheckWinner = function(){
+    if((this.pdeck1.length==0)&&(this.pdeck2.length==0)){
+        this.user.emit('draw');
+        this.enemy.emit('draw');
+    }
+    if(this.pdeck1.length==0){
+        this.user.emit('win');
+        this.enemy.emit('lose');
+    }
+    if(this.pdeck2.length==0){
+        this.user.emit('lose');
+        this.enemy.emit('win');
+    }
 }
 FoolGame.take = function(game_id, enemy){
     if((enemy.id==games[game_id].enemy.id)&&(games[game_id].board[0].length)){

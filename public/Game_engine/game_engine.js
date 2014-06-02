@@ -50,8 +50,23 @@ var Foolgame={
                 .on('end', function(){
                   socket.emit('close', Foolgame.game_id);
                 })
-                .on('distribution', function(deck, len){
+                .on('distribution', function(deck, len, index){
                     Foolgame.Drawing(deck, len);
+                    var qw = document.getElementById('deck');
+                    var ind = document.getElementById('index');
+                    if (index>50)
+                        qw.className = "";
+                    if (index>51){
+                        var adv = document.getElementById('advantage');
+                        adv.className = "";
+                    }
+                    qw.onmouseover = function(){
+                        ind.style.display = "block";
+                        ind.innerHTML = 52-index;
+                    }
+                    qw.onmouseout = function(){
+                        ind.style.display = "none";
+                    }
                 })
                 .on('advantage', function(id){
                     Foolgame.Advantage(id);
@@ -61,6 +76,18 @@ var Foolgame={
                 })
                 .on('step_enemy',function(id,ncard){
                     Foolgame.Enemystep(id,ncard)
+                })
+                .on('draw', function(){
+                    clearTable();
+                    Foolgame.DisplayChange("Ничья");
+                })
+                .on('lose', function(){
+                    clearTable();
+                    Foolgame.DisplayChange("Вы днище");
+                })
+                .on('win', function(){
+                    clearTable();
+                    Foolgame.DisplayChange("Поздравляем, вы уделали этого сосунка ;)");
                 })
         })
     },
@@ -143,6 +170,18 @@ var Foolgame={
             }
         }
     })
+    },
+    DisplayChange: function(str){
+        $(function(){
+            var btn = document.getElementById('button');
+            var dis = document.getElementById('display');
+                dis.innerHTML = str;
+                btn.innerHTML = "Найти игру";
+                btn.style.margin = "30px 0 5px 12px";
+                btn.onclick = function(){
+                    Foolgame.init();
+                };
+        })
     }
 }
 
