@@ -1,4 +1,5 @@
 var games = [];
+var users=[];
 function juciefroot(pdeck, x, deck, index){
     var i;
     if (pdeck.length>0){
@@ -92,7 +93,7 @@ var GameItem = function(game_id, user, enemy, x, y) {
     // Кол-во сделанных ходов
     this.steps_user = 0;
     this.steps_enemy = 0;
-    this.index = 38;
+    this.index = 0;
     // флаг на взятие карт
     this.turn = 0;
 }
@@ -108,9 +109,7 @@ GameItem.prototype.distribution=function(){
             len+=6-x;
         if (6-y>0)
             len+=6-y;
-        console.log('index = '+this.index+len);
         if (this.index+len>52){
-            console.log('last');
             if (x>y){
                 for (i=y;i<x;i++){
                     this.pdeck2[i]=this.deck[this.index];
@@ -156,20 +155,29 @@ GameItem.prototype.distribution=function(){
     this.user.emit('turn',this.game_id,true);
     this.enemy.emit('turn',this.game_id,false);
     if(this.index>51) this.CheckWinner();
-    console.log('index '+this.index);
-    console.log(this.pdeck1);
-    console.log(this.pdeck2);
-    console.log(this.deck);
 }
-FoolGame.CreateGame = function(game_id, user, enemy, x, y){
-    var game = new GameItem(game_id,user,enemy,x,y);
+FoolGame.CreateGame = function(game_id, user, enemy){
+    var game = new GameItem(game_id,user,enemy,0,0);
     games[game_id]=game;
+    users[user] = game_id;
+    users[enemy] = game_id;
     games[game_id].distribution();
     games[game_id].user.emit('advantage',games[game_id].advantage);
     games[game_id].enemy.emit('advantage',games[game_id].advantage);
 }
+FoolGame.disconnect = function(user){
+    try{
+        var gameid = users[user];
+        if (games[gameid].user == user)
+            games[gameid].enemy.emit('win');
+        else
+            games[gameid].user.emit('win');
+    }
+    catch(err){
+        console.log('disconnect after falling server');
+    }
+}
 FoolGame.Step = function(game_id,id,user){
-    console.log('step');
         if((games[game_id].user.id == user.id)&&(tryput(game_id,id)))
         {
             games[game_id].enemy.emit('step_enemy',id,games[game_id].pl1);
@@ -238,5 +246,7 @@ GameItem.prototype.CheckWinner = function(){
 FoolGame.take = function(game_id, enemy){
     if((enemy.id==games[game_id].enemy.id)&&(games[game_id].board[0].length)){
         games[game_id].turn = 1;
+        games[game_id].enemy.emit('take_ok');
+        games[game_id].user.emit('enemy_take');
     }
 }

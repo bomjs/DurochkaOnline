@@ -5,9 +5,16 @@ body {
     color: #3071a9;
 }
 
-a {
-    color: #00B7FF;
+/*a{*/
+    /*color: #00B7FF;*/
+/*}*/
+li.dropdown-menu:after a{
+    color: #ffffff;
 }
+li ~ a{
+    color: green;
+}
+
 .chat {
     font-style:italic;
     width: 20%;
@@ -32,7 +39,23 @@ a {
     float:right;
     margin: 5px 5px 0 0;
 }
-
+#thinking{
+    margin-top: 20px;
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 3px;
+    width: 120px;
+    height: 60px;
+    padding-top: 2px;
+    text-align: center;
+    font-size: 22px;
+    font-family:fantasy;
+    font-style: oblique;
+    color: #000000;
+    text-shadow: 4px 1px 2px rgba(150, 150, 150, 1);
+    box-shadow: 4px 4px 2px 0 #424680;
+}
 #index{
     text-align: center;
     position: absolute;
@@ -43,8 +66,10 @@ a {
     background-color: #ffffff;
     border-radius: 5px;
     display: none;
+    color: #000000;
 }
 #display{
+    position: absolute;
     margin: 10px 0 0 30px;
     font-size: 17px;
     color: #020202;

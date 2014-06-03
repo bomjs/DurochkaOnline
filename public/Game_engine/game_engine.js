@@ -30,11 +30,16 @@ function removeChildren(node) {
         node.removeChild(children[0]);
     }
 }
+function Disablebtn(){
+    var btn = document.getElementById('button');
+    btn.disabled = true;
+}
 var Foolgame={
     game_id: null,
     turn: false,
     init: function(){
         $(function(){
+            Disablebtn();
             var dis = document.getElementById('display');
             dis.innerHTML = "Ожидание соперника";
             socket.emit('start');
@@ -68,6 +73,9 @@ var Foolgame={
                         ind.style.display = "none";
                     }
                 })
+                .on('enemy_take', function(){
+                    Foolgame.showThinking();
+                })
                 .on('advantage', function(id){
                     Foolgame.Advantage(id);
                 })
@@ -88,6 +96,8 @@ var Foolgame={
                 .on('win', function(){
                     clearTable();
                     Foolgame.DisplayChange("Поздравляем, вы уделали этого сосунка ;)");
+                }).on('take_ok', function(){
+                    Disablebtn();
                 })
         })
     },
@@ -100,6 +110,12 @@ var Foolgame={
         card.className='cards';
         gamefield.appendChild(card);
         setBackground(id,card);
+        })
+    },
+    showThinking: function(){
+        $(function(){
+        var div = document.getElementById('thinking');
+        div.style.display = 'block';
         })
     },
     Enemystep: function(id,ncard){
@@ -125,6 +141,7 @@ var Foolgame={
     Drawing: function(deck, len){
         $(function(){
             clearTable();
+            var margin;
             var player_cards=document.getElementById('player_cards');
             var enemy_cards=document.getElementById('enemy_card');
             var n;
@@ -133,6 +150,10 @@ var Foolgame={
                 var enemy_card = document.createElement('div');
                 enemy_card.className='enemy_cards';
                 enemy_card.id = i + 'enemy';
+                if (len>7){
+                    margin = -(len-7)*3;
+                    enemy_card.style.marginLeft = margin+'px';
+                }
                 enemy_cards.appendChild(enemy_card);
                 setBackground(-1,enemy_card);
             }
@@ -142,6 +163,10 @@ var Foolgame={
                 var card = document.createElement('div');
                 card.className='cards';
                 card.id=deck[i];
+                if (deck.length>7){
+                    margin = -(deck.length-7)*3;
+                    card.style.marginLeft = margin+'px';
+                }
                 card.onclick=function(){
                     socket.emit('step',Foolgame.game_id,(this).id);
                 }
@@ -156,14 +181,18 @@ var Foolgame={
         var dis = document.getElementById('display');
         if(turn){
             dis.innerHTML = "Ваш ход";
+            btn.disabled = false;
             btn.innerHTML = "Завершить ход";
             btn.style.margin = "30px 0 5px 12px";
             btn.onclick = function(){
                 socket.emit('endstep', game_id);
+                var div = document.getElementById('thinking');
+                div.style.display = 'none';
             };
         }else{
             dis.innerHTML = "Вы отбиваетесь";
             btn.innerHTML = "Беру";
+            btn.disabled = false;
             btn.style.margin = "30px 0 5px 42px";
             btn.onclick = function(){
                 socket.emit('take', game_id);
